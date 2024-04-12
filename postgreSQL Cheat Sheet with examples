@@ -1,0 +1,93 @@
+In this article, we have shown PostgreSQL Cheat Sheet with examples.
+
+1. Connection
+Connect to PostgreSQL Server using psql, pgadmin and dbeaver
+sudo -u postgres psql
+\conninfo To get connection information
+show server_version;
+select version();
+cat PG_VERSION
+pg_config --version
+
+\! clear -->Clear the screen
+\dx to list all extensions installed
+\! or \q TO exit
+2. Databases
+\l To list databases
+select datname from pg_database;
+\c \connect to the databases
+select current_database();
+create database
+rename database
+find database size
+select pg_database_size(sales);
+All databases size limits in descending order.
+select datname, pg_size_pretty(pg_database_size(datname))
+from pg_database
+order by pg_database_size(datname) desc;
+drop database
+3 Schemas:
+Get list of schemas in a database
+\dn
+SELECT schema_name FROM information_schema.schemata;
+How to change current schema?
+set search_path to accounts;
+To cross check run select current_schema;
+create schema
+drop schema
+4 Tables:
+\dt
+SELECT table_schema,table_name FROM information_schema.tables ORDER BY table_schema,table_name;
+Create table
+add column to table
+delete column from table
+ALTER TABLE <table_name> IF EXISTS
+ADD <column_name> <data_type> [<constraints>];
+insert data into tablerename table
+find table size:
+select pg_relation_size('accounts');
+find table path
+SELECT pg_relation_filepath('table_name');
+delete table
+drop table
+
+5 Users:
+\du
+SELECT rolname FROM pg_roles;
+select current_user;
+create user
+change password
+drop user
+grant all privileges to users in a database
+Grant connection permissions on database
+GRANT CONNECT ON DATABASE <db_name> TO <user_name>;
+Grant permissions on schema
+GRANT USAGE ON SCHEMA public TO <user_name>;
+GRANT SELECT, UPDATE, INSERT ON ALL TABLES IN SCHEMA public TO <user_name>;
+GRANT SELECT, UPDATE, INSERT ON <table_name> TO <user_name>;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO <user_name>;
+To see what users are running?
+select datname,usename, state, query from pg_stat_activity;
+
+6 Miscellaneous commands in psql
+How to execute previous command in PostgreSQL?
+\g
+How to find commnad history in PostgreSQL?
+\s
+How to edit query in PostgreSQL?
+\e
+How to execute script from psql?
+\i query statement
+To save query output from psql shell
+\o filename_to_store the output.
+
+PostgreSQL configuration file location:
+show config_file;
+PostgreSQL hba file location:
+show hba_file;
+
+How to check the status of PostgreSQL server:
+sudo systemctl status postgresql
+
+Current configuration values
+SHOW all;
