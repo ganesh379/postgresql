@@ -1,0 +1,21 @@
+Find top 5 tables in PostgreSQL Database:
+SELECT nspname || '.' || relname AS "relation",
+   pg_size_pretty(pg_total_relation_size(C.oid)) AS "total_size"
+ FROM pg_class C
+ LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+ WHERE nspname NOT IN ('pg_catalog', 'information_schema')
+   AND C.relkind <> 'i'
+   AND nspname !~ '^pg_toast'
+ ORDER BY pg_total_relation_size(C.oid) DESC limit 5;
+ 
+Find databases sizes in descending order:
+ select datname, pg_size_pretty(pg_database_size(datname))
+from pg_database
+order by pg_database_size(datname) desc;
+
+find table size
+select pg_relation_size('table_name');
+Find database size
+select pg_database_size('database_name');
+\dt+
+\l+ database_name
