@@ -1,0 +1,26 @@
+1. Find all sessions on PostgreSQL
+select * from from pg_stat_activity;
+2. Find idle queries
+select * from from pg_stat_activity where state='idle';
+3. To get queries running more than 30 minutes
+select current_timestamp-query_start as runtime, datname,usename, query from pg_stat_activity
+where state='active' and current_timestamp-query_start> '30 min'
+order by 1 desc;
+4. Check active sessions:
+select current_timestamp-query_start as runtime, datname,usename, query from pg_stat_activity
+where state='active'
+order by 1 desc;
+5. To see what users are running?
+select datname,usename, state, query from pg_stat_activity;
+
+To kill pid(session) from PostgreSQL?
+SELECT 
+    pg_terminate_backend(pid) 
+FROM 
+    pg_stat_activity 
+WHERE 
+    -- don't kill my own connection!
+    pid <> pg_backend_pid()
+    -- don't kill the connections to other databases
+    AND datname = 'db_name'
+    ;
